@@ -1,29 +1,58 @@
-This is the 8th project in our series let’s follow on
-<img width="746" height="420" alt="image" src="https://github.com/user-attachments/assets/409402ac-dd81-4cb9-be67-17f7742b87b1" />
+# Three-Tier Application Deployment on Kubernetes (EKS)
 
-what do you mean by three tier ?
-It’s actually a division of your system in 3 parts
+This repository contains a complete implementation of a **Three-Tier Application** deployed on **Kubernetes (Amazon EKS)**.  
+The application is containerized using Docker and orchestrated using Kubernetes services and ingress.
 
-1. Presentation Layer (Tier 1):
-What you you see when you open your website is called the presentation layer basically it is the layer that users interact directly
-2. Logical Layer (Tier 2):
+---
 
-Imagine this layer as the brain behind the scenes. It takes the information you provide through the user interface and processes it according to the rules of the system. If it’s a shopping website, for instance, this layer figures out things like the total price of your items, applies discounts, and checks if everything is in stock
-3. Data Layer (Tier 3):
+## 🏗️ Architecture
 
-This is where the data is stored and retrieved. It’s like the memory of the system.
-Data could be stored in databases, files, or any other data storage systems.
-The data layer is responsible for managing and storing information that the system needs.
+The application follows a three-tier architecture:
 
-<img width="431" height="223" alt="image" src="https://github.com/user-attachments/assets/1f24fea7-e698-41ce-8d9f-0bd80e6ab42a" />
+1. **Frontend**
+   - React-based UI
+   - Exposed to users via Kubernetes Ingress
 
-Completion Steps →
-Phase 1 →Setup base EC2 , IAM user and Basic tools on EC2
+2. **Backend**
+   - Node.js / Express REST API
+   - Communicates with MongoDB
 
-Phase 2 →Built frontend and backend images
+3. **Database**
+   - MongoDB
+   - Deployed inside the Kubernetes cluster
 
-Phase 3 → Kubernetes
+---
 
-Phase 4 →Setup Application Load balancer and ingress
+## 🛠️ Tech Stack
 
-Phase 5 →Destroy Everything
+- AWS (EKS, ECR, IAM)
+- Docker
+- Kubernetes
+- kubectl
+- eksctl
+- Helm
+- AWS Load Balancer Controller
+
+---
+
+## 📁 Project Structure
+
+```text
+.
+├── frontend/
+│   ├── Dockerfile
+│   └── source code
+├── backend/
+│   ├── Dockerfile
+│   └── source code
+├── k8s_manifests/
+│   ├── frontend-deployment.yaml
+│   ├── frontend-service.yaml
+│   ├── backend-deployment.yaml
+│   ├── backend-service.yaml
+│   ├── full_stack_lb.yaml
+│   └── mongo/
+│       ├── mongo-deployment.yaml
+│       └── mongo-service.yaml
+└── README.md
+
