@@ -21,7 +21,8 @@ It’s actually a division of your system in 3 parts
 - Data could be stored in databases, files, or any other data storage systems.
 - The data layer is responsible for managing and storing information that the system needs.
 
-<img src="images/1.png" width="500" >
+<img src="images/1.png" width="400" >
+
 ---
 
 ## Completion Steps &#8594;
@@ -71,6 +72,7 @@ It’s actually a division of your system in 3 parts
 1. Click on IAM
 
 <br> <br>
+
 2. Click on user --> Creaate User
 
 <img width="256" height="364" alt="image" src="https://github.com/user-attachments/assets/caea2f89-ad37-4ac3-b184-633e6f6be3a6" />
@@ -81,12 +83,13 @@ It’s actually a division of your system in 3 parts
 
 <img src="images/4.png" width="700" >
 
-<br> <br>
+<br> 
 
 4. choose a password for your user → click next
 
 
-<br> <br>
+<br>
+
 5. Attach the policies directly to your iam user → click next
 
 <br> <br>
@@ -99,11 +102,11 @@ It’s actually a division of your system in 3 parts
 
 <img src="images/6.png" width="700" >
 
-<br><br>
+<br>
 
 review and create user
 
-<br><br>
+<br>
 
 6. click on create user
 <br><br>
@@ -132,20 +135,20 @@ review and create user
 10. choose aws cli from the options listed
 
 <br><br>
-<img width="700" height="394" alt="image" src="https://github.com/user-attachments/assets/7fe77186-a2a3-4c68-ba67-12c014ca4710" />
+<img src="images/11.png" width="700" >
 <br>
 
 11. click next and download you csv file for username and password
 <br>
 
-<img width="700" height="394" alt="image" src="https://github.com/user-attachments/assets/e84d05c7-a983-4d4f-b031-29b7adca2789" />
+<img src="images/012.png" width="700" >
 
 <br><br>
 
-**Step 2. launching a base EC2 where we do all work**
+**Step 2. launching a base EC2 where we do all work &#8594;**
 <br><br>
 1. open your aws console and navigate to ec2 and click on launch ec2
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/beadc97b-df17-446e-9e04-874e23d21e11" />
+<img src="images/013.png" width="700" >>
 <br><br>
 
 2. Click on connect and run the following commands
@@ -206,10 +209,11 @@ sudo chmod 777 /var/run/docker.sock
 which docker
 ```
 <br><br>
-<img width="1100" height="619" alt="image" src="https://github.com/user-attachments/assets/05028cf1-a321-4725-bee5-ba4bf10427fc" />
+<img src="images/016.png" width="700" >
 
 <img width="560" height="50" alt="image" src="https://github.com/user-attachments/assets/1f9885cd-ecf9-4c88-aaca-b71be94f2352" />
 <br><br>
+
 **3. setup kubectl**
 <br><br>
 *It is a command-line tool used in managing and interacting with Kubernetes clusters*
@@ -233,7 +237,8 @@ eksctl version
 ```
 <br><br>
 <img width="720" height="50" alt="image" src="https://github.com/user-attachments/assets/16b393d1-7221-4632-84bd-ae9d81dff4a7" />
-<br><br>
+
+---
 ## Phase 2 → Built frontend and backend images
 <br><br>
 **Step 1 → setup Elastic container registery (ECR)**
@@ -246,7 +251,7 @@ eksctl version
 2. *click on create repository* for frontend and set visiblity setting to public
 <br><br>
 <img width="720" height="197" alt="image" src="https://github.com/user-attachments/assets/7a07e6eb-865b-4e1b-953f-10ed3f5dfe60" />
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/5bfe307d-65fe-4666-b869-da81b7f55b36" />
+<img src="images/21.png" width="700" >
 <br><br>
 3. Setup backend Repository
 <br><br>
@@ -266,7 +271,7 @@ ls
 <br><br>
 2. Go to your ecr repo and click on view push commands
 <br><br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/3d949bfc-de14-478d-979c-976bc8b61dc2" />
+<img src="images/25.png" width="700" >
 <br><br>
 3.  Run the above command one by one to build the frontend image and push to ecr repository
 <br><br>
@@ -277,7 +282,7 @@ docker tag 3-tier-frontend:latest public.ecr.aws/l0l7e4u1/3-tier-frontend:latest
 docker push public.ecr.aws/l0l7e4u1/3-tier-frontend:latest
 ```
 <br><br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/828e7505-ee79-48e9-8d9a-ac1fc5e0663c" />
+<img src="images/26.png" width="700" >
 <br><br>
 <img width="720" height="161" alt="image" src="https://github.com/user-attachments/assets/0f22f064-793c-45b4-8f6a-b451506b5766" />
 <br><br>
@@ -292,7 +297,7 @@ docker run -d -p 3000:3000 3-tier-frontend:latest
 <br><br>
 *your frontend has setup and your application is now running to see your application you could browse →public-ip:3000*
 <br><br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/cc3aa1b6-45bc-438b-921e-468327b941cb" />
+<img src="images/29.png" width="700" >
 <br><br>
 **Step 3 → Setup backend**
 <br><br>
@@ -308,7 +313,7 @@ ls
 <br><br>
 2. Go to your ecr repo and click on view push commands of backend repo.
 <br><br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/d008501f-5aca-407b-bb0e-1af14e7f6819" />
+<img src="images/32.png" width="700" >
 <br><br>
 3. run the above command one by one in your terminal
 ```text
@@ -318,9 +323,9 @@ docker tag 3-tier-backend:latest public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 docker push public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 ```
 <br><br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/bfd14bf4-dc02-4538-a0af-70c3cd38a77e" />
+<img src="images/33.png" width="700" >
 <br><br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/f2d30ce6-f0ec-491b-af45-d53dc34588b6" />
+<img src="images/34.png" width="700" >
 <br><br>
 *Now your backend imge is built successfully and also pushed to Elastic container registery which we used when we create elastic kubernetes service*
 <br><br>
@@ -357,12 +362,11 @@ kubectl get nodes
 ``` 
 <br><br>
 2. It takes 15 to 20 mins to create a cluster
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/b556c5e9-26dc-4062-994e-605890e57567" />
-
+<img src="images/35.png" width="700" >
 <br><br>
 3. on aws console search for aws cloud formation to view the events happening in creation of EKS cluster
 <br>
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/57a53b1e-60d2-40af-b287-d6ead9bdaf58" />
+<img src="images/36.png" width="700" >
 <img width="720" height="62" alt="image" src="https://github.com/user-attachments/assets/2046a30d-4654-49ae-bac0-8987ca671091" />
 <br><br>
 4. creating Namesapce from the following command
@@ -508,7 +512,7 @@ kubectl apply -f full_stack_lb.yaml
 kubectl get ing -n workshop
 ```
 2. go to your Web Browser and paste the above dns address
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/52114c0f-d1f9-4617-8a00-7d394f3e35e6" />
+<img src="images/48.png" width="700" >
 <br><br>
 *Congrtas !! Your application is accessible through load balancer ingress*
 <br><br>
@@ -528,7 +532,7 @@ eksctl delete cluster --name three-tier-cluster --region us-east-1
 aws cloudformation delete-stack --stack-name eksctl-three-tier-cluster-cluster
 ```
 4. you could checkout alll the changes in cloud formation console of aws
-<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/75e58461-ce6e-49d0-be43-c5f187dc5c9b" />
+<img src="images/49.png" width="700" >
 
 
 **Everything is deleted now thanks me for reducing your aws bill**
