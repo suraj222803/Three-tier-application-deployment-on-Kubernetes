@@ -6,9 +6,12 @@ It’s actually a division of your system in 3 parts
 1. **Presentation Layer (Tier 1):**
    
 What you you see when you open your website is called the presentation layer basically it is the layer that users interact directly
+
+
 2. **Logical Layer (Tier 2):**
 
 Imagine this layer as the brain behind the scenes. It takes the information you provide through the user interface and processes it according to the rules of the system. If it’s a shopping website, for instance, this layer figures out things like the total price of your items, applies discounts, and checks if everything is in stock
+
 3. **Data Layer (Tier 3):**
 
 - This is where the data is stored and retrieved. It’s like the memory of the system.
@@ -56,6 +59,7 @@ Imagine this layer as the brain behind the scenes. It takes the information you 
 ---
 ## Phase 1 →Setup base EC2 , IAM user and Basic tools on EC2
 **Step 1. Create an IAM user**
+
 Click on IAM
 
 2. Click on user --> Creaate User
@@ -100,8 +104,289 @@ cd 3-tier
 
    ```
 4. Run ls to see the what is inside the repo
+   ```text
+   ls
+   ```
 
-**Step 3 --> Setup aws cli ,docker ,kubectl and eksctl **
+**Step 3 --> Setup aws cli ,docker ,kubectl and eksctl**
+
+**1. configuring aws cli**
+
+AWS CLI (Amazon Web Services Command Line Interface) is a tool that allows you to interact with AWS services using commands
+
+1. run the following commands to install aws cli
+```text
+snap install aws-cli --classic
+```
+2.   you have to configure aws by the command →
+```text
+aws configure
+```   
+3. It is asked for access key and secret key now you have to open that csv file you downloaded above and copy the access and secret key.
+4. Remain everything as it is and click enter.
+   *your aws cli is setup now setup docker*
+
+**2. Setup docker**
+1. run the following commands
+```text
+apt install docker.io
+usermod -aG docker $USER # Replace with your username e.g ‘ubuntu’
+newgrp docker
+sudo chmod 777 /var/run/docker.sock
+which docker
+```
+**3. setup kubectl**
+
+*It is a command-line tool used in managing and interacting with Kubernetes clusters*
+
+1. To install kubectl run the following commands
+```text
+snap install kubectl --classic
+```
+**4. setup eksctl**
+
+*It is a command-line tool used for managing Amazon EKS (Elastic Kubernetes Service) clusters.*
+
+1. To install eksctl tool run the following commands
+```text
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
+```
+##Phase 2 →Built frontend and backend images
+
+**Step 1 → setup Elastic container registery (ECR)**
+
+*It is similiar to dockerhub where we stored the docker images*
+
+1. Go to your aws console and search for ECR.
+2. *click on create repository* for frontend and set visiblity setting to public
+3. Setup backend Repository
+
+**Step 2 --> Setup frontend**
+
+1. In terminal go to frontend directory and run ls command
+```text
+cd forntend/
+ls
+```
+2. Go to your ecr repo and click on view push commands
+3.  Run the above command one by one to build the frontend image and push to ecr repository
+```text
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/l0l7e4u1
+docker build -t 3-tier-frontend .
+docker tag 3-tier-frontend:latest public.ecr.aws/l0l7e4u1/3-tier-frontend:latest
+docker push public.ecr.aws/l0l7e4u1/3-tier-frontend:latest
+```
+4. Let’s run a container from the image
+```text
+docker images -->copy the image name from the list 
+docker run -d -p 3000:3000 3-tier-frontend:latest
+```
+*your frontend has setup and your application is now running to see your application you could browse →public-ip:3000*
+
+**Step 3 →Setup backend**
+1. Now go to backend directory to setup backend
+```text
+cd ../backend
+ls
+```
+2. Go to your ecr repo and click on view push commands of backend repo.
+3. run the above command one by one in your terminal
+```text
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/l0l7e4u1
+docker build -t 3-tier-backend .
+docker tag 3-tier-backend:latest public.ecr.aws/l0l7e4u1/3-tier-backend:latest
+docker push public.ecr.aws/l0l7e4u1/3-tier-backend:latest
+```
+*Now your backend imge is built successfully and also pushed to Elastic container registery which we used when we create elastic kubernetes service*
+
+## Phase 3 --> Kubernetes
+
+**1. What is Deployment:**
+-  *Imagine a Factory:* Think of a deployment as a factory that produces and manages copies of your software applications.
+
+-  *Multiple Replicas:* Just like a factory can produce multiple identical items, a deployment in Kubernetes can create and handle multiple copies (replicas) of your application.
+
+-  *Easy Updates:* If you want to change or update your application, the deployment system can smoothly handle that, like swapping out parts in a factory without stopping production.
+-  
+**2. what is Service:**
+- *Imagine a Reception Desk:*  Picture a service in Kubernetes like a reception desk in a building.
+
+- *Central Point of Contact:* The service provides a central point of contact for your applications. Instead of trying to find each application directly, other parts of your system can talk to the service, and it knows how to find the right application.
+  
+- *Stable Address:* Just as you have a consistent address for the reception desk, a service has a stable address that other parts of your system can use to communicate with your applications.
+
+**3. What is Namesapce**
+
+- It’s like a labeled section within Kubernetes where you can organize and run your applications. Each namespace is like a fenced-off area where your apps can do their thing without stepping on each other’s toes.
+
+- So, in simpler terms, a namespace in Kubernetes is a way to keep different projects or applications separate and organized, making it easier to manage them in the bustling environment of a Kubernetes cluster
+
+
+**Step 1 --> Setup EKS Cluster and create a namespace**
+
+1. Run the following command to setup EKS cluster
+```text
+eksctl create cluster --name three-tier-cluster --region us-east-1 --node-type t2.medium --nodes-min 2 --nodes-max 2
+aws eks update-kubeconfig --region us-east-1 --name three-tier-cluster
+kubectl get nodes
+``` 
+2. It takes 15 to 20 mins to create a cluster
+3. on aws console search for aws cloud formation to view the events happening in creation of EKS cluster
+4. creating Namesapce from the following command
+```text
+kubectl create namespace workshop
+kubectl config set-context --current --namespace workshop
+```
+
+**Step 2--> create a deployment and service for Frontend**
+1. go to k8s_manifests directory there you will find deployment and service files for frontend
+```text
+cd ../k8s_manifests
+```
+2. you have to edit the file called frontend-deployment.yaml
+3. one thing you need to be changed that is your image name
+<img width="720" height="117" alt="image" src="https://github.com/user-attachments/assets/d1c0da20-4db9-43b1-8230-d7b51dff2188" />
+
+4. so, go to your ecr repo --> select the frontend repo --> click on view public listing and copy the image name and paste inside the frontend-deployment.yaml file 
+
+Now run the following commands to create the deployment and service for frontend
+
+```text
+kubectl apply -f frontend-deployment.yaml
+kubectl apply -f frontend-service.yaml
+```
+
+**Step 3→ create a deployment and service for Backend**
+
+1. In the same folder you will find backend-deployment.yaml and backend-service.yaml
+
+2. you have to edit the file called backend-deployment.yaml
+
+3. one thing you need to be changed that is your image name
+
+4. so, go to your ecr repo → select the backend repo →click on view public listing and copy the image name and paste inside the backend-deployment.yaml file
+
+   
+Now run the following commands to create the deployment and service backend
+
+```text
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+kubectl get pods -n workshop
+```
+**Now our two tier is ready that is frontend and backend let’s setup the third tier**
+
+**step 4 →Setup Database tier**
+
+1. Locate the mongo folder that stores deployment , service and secrets manifests
+
+2. Run the below commands to setup database tier
+
+```text
+kubectl apply -f .
+kubectl get all
+```
+
+Now your all three tiers are ready to go but how do you access them for that we have to create a application load balancer to route outside traffic towards cluster and an ingress for in internal routing between our 3 tiers
+
+##Phase 4 --> Setup Application Load balancer and ingress
+
+*we have to create a application load balancer to route outside traffic towards cluster and an ingress for in internal routing between our 3 tiers*
+
+**Step 1 --> Setup aws load balancer ; installation and attachement it to your EKS cluster**
+
+1. Below command fetch the iam policy for your ALB
+```text
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
+```
+2. This command create the iam policy in your aws account from iam_policy.json file that is setup in the first command
+
+```text
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
+```
+3. This command apply the load balancer policy to your eks cluster so that your eks cluster is working with your load balancer according to the policy
+
+```text
+eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=three-tier-cluster --approve
+```
+4. This command create and attach an service account to your cluster so that your cluster is allowed to work with load balancer service
+
+```text
+eksctl create iamserviceaccount --cluster=three-tier-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy arn=arn:aws:iam::767397866747:policy/AWSLoadBalancerControllerIAMPolicy --approve --region=us-east-1
+```
+*Note :- please change your aws account no. from the below command otherwise it won’t work*
+
+*All the policies are attached let’s deploy the load balancer*
+
+5. For this we have to install helm→Helm is a special tool that helps you easily carry and manage your software when you’re using Kubernetes, which is like a big playground for running applications.
+
+```text
+sudo snap install helm --classic
+```
+
+6. After this we have to add a particular manifest for load balancer that is pre written by someone on eks repo by using helm
+
+```text
+helm repo add eks https://aws.github.io/eks-charts
+```
+
+7. update the eks repo using helm
+
+```text
+helm repo update eks
+```
+8. Install the load balancer controller on your eks cluster
+
+```text
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=my-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+*Now your Load balancer is working let’s setup Ingress for internal routing*
+
+**Step 2 --> Setup Ingress for internal routing**
+
+1. Loacte the full_stack_lb.yaml file
+
+```text
+kubectl apply -f full_stack_lb.yaml
+kubectl get ing -n workshop
+```
+2. go to your Web Browser and paste the above dns address
+<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/52114c0f-d1f9-4617-8a00-7d394f3e35e6" />
+
+*Congrtas !! Your application is accessible through load balancer ingress*
+
+##Phase 5 --> Destroy Everything
+
+1. On your current folder run
+```text
+kubectl delete -f .
+```
+2. go to mongo folder to delete database tier
+```text
+kubectl delete -f .
+```
+3. Delete the cluster and the stack of your cloud formation
+```text
+eksctl delete cluster --name three-tier-cluster --region us-east-1
+aws cloudformation delete-stack --stack-name eksctl-three-tier-cluster-cluster
+```
+4. you could checkout alll the changes in cloud formation console of aws
+<img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/75e58461-ce6e-49d0-be43-c5f187dc5c9b" />
+
+
+**Everything is deleted now thanks me for reducing your aws bill**
+
+**Follow me on LinkedIn:**  
+🔗 [Suraj Ugale](https://www.linkedin.com/in/suraj-ugale/)
+
+
+
+
+
+
 
 
 
