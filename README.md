@@ -21,8 +21,8 @@ It’s actually a division of your system in 3 parts
 - Data could be stored in databases, files, or any other data storage systems.
 - The data layer is responsible for managing and storing information that the system needs.
 
-<img width="431" height="223" alt="image" src="https://github.com/user-attachments/assets/44a5089e-6cae-40f8-8df4-f736c1a7c002" />
-![image](https://github.com/user-attachments/assets/images/1.png)
+<img width="431" height="223" alt="image" src="https://github.com/user-attachments/assets/images/1.png" />
+
 ---
 
 ## Completion Steps &#8594;
