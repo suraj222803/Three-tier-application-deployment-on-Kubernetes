@@ -2,7 +2,7 @@
 
 **what do you mean by three tier ?**
 
-&#8594; Forward Arrow
+ 
 It’s actually a division of your system in 3 parts
 
 1. **Presentation Layer (Tier 1):**
@@ -25,7 +25,7 @@ It’s actually a division of your system in 3 parts
 
 ---
 
-## Completion Steps -->
+## Completion Steps &#8594;
 
  **Phase 1** → Setup base EC2 , IAM user and Basic tools on EC2
 
@@ -62,7 +62,7 @@ It’s actually a division of your system in 3 parts
 └── README.md
 ```
 ---
-## Phase 1 →Setup base EC2 , IAM user and Basic tools on EC2
+## Phase 1 → Setup base EC2 , IAM user and Basic tools on EC2
 
 **Step 1. Create an IAM user**
 <br>  <br>
@@ -84,14 +84,14 @@ It’s actually a division of your system in 3 parts
 
 <br> <br>
 
-4. choose a password for your user →click next
+4. choose a password for your user → click next
 
 
 <br> <br>
 5. Attach the policies directly to your iam user → click next
 
 <br> <br>
-**Note --> I will provide the administrator accesss for now but we careful while attaching the policies at your workapce**
+**Note &#8594; I will provide the administrator accesss for now but we careful while attaching the policies at your workapce**
 <br>
 <br>
 
@@ -172,7 +172,7 @@ cd 3-tier
 <br><br>
 <img width="720" height="37" alt="image" src="https://github.com/user-attachments/assets/9fd1e7d2-3efc-41b1-94bd-ebc44b8cad37" />
 <br><br>
-**Step 3 --> Setup aws cli ,docker ,kubectl and eksctl**
+**Step 3 &#8594; Setup aws cli ,docker ,kubectl and eksctl**
 <br><br>
 **1. configuring aws cli**
 <br><br>
@@ -235,7 +235,7 @@ eksctl version
 <br><br>
 <img width="720" height="50" alt="image" src="https://github.com/user-attachments/assets/16b393d1-7221-4632-84bd-ae9d81dff4a7" />
 <br><br>
-## Phase 2 →Built frontend and backend images
+## Phase 2 → Built frontend and backend images
 <br><br>
 **Step 1 → setup Elastic container registery (ECR)**
 <br><br>
@@ -295,7 +295,7 @@ docker run -d -p 3000:3000 3-tier-frontend:latest
 <br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/cc3aa1b6-45bc-438b-921e-468327b941cb" />
 <br><br>
-**Step 3 →Setup backend**
+**Step 3 → Setup backend**
 <br><br>
 <img width="720" height="95" alt="image" src="https://github.com/user-attachments/assets/53697884-9a8b-4728-aa5a-651d3f2668a2" />
 <br><br>
@@ -325,7 +325,7 @@ docker push public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 <br><br>
 *Now your backend imge is built successfully and also pushed to Elastic container registery which we used when we create elastic kubernetes service*
 <br><br>
-## Phase 3 --> Kubernetes
+## Phase 3 &#8594; Kubernetes
 <br><br>
 **1. What is Deployment:**
 -  *Imagine a Factory:* Think of a deployment as a factory that produces and manages copies of your software applications.
@@ -348,7 +348,7 @@ docker push public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 - So, in simpler terms, a namespace in Kubernetes is a way to keep different projects or applications separate and organized, making it easier to manage them in the bustling environment of a Kubernetes cluster
 <br><br>
 
-**Step 1 --> Setup EKS Cluster and create a namespace**
+**Step 1 &#8594; Setup EKS Cluster and create a namespace**
 <br><br>
 1. Run the following command to setup EKS cluster
 ```text
@@ -374,7 +374,7 @@ kubectl config set-context --current --namespace workshop
 <br><br>
 <img width="720" height="49" alt="image" src="https://github.com/user-attachments/assets/5629bb66-de2f-491e-8b4d-b24f7aa4af7d" />
 <br><br>
-**Step 2--> create a deployment and service for Frontend**
+**Step 2 &#8594; create a deployment and service for Frontend**
 <br><br>
 1. go to k8s_manifests directory there you will find deployment and service files for frontend
 ```text
@@ -389,7 +389,7 @@ cd ../k8s_manifests
 <img width="720" height="117" alt="image" src="https://github.com/user-attachments/assets/63bacfe1-8ae2-47e9-90c0-a672038c18f4" />
 <br><br>
 
-4. so, go to your ecr repo --> select the frontend repo --> click on view public listing and copy the image name and paste inside the frontend-deployment.yaml file 
+4. so, go to your ecr repo &#8594; select the frontend repo &#8594; click on view public listing and copy the image name and paste inside the frontend-deployment.yaml file 
 <br><br>
 Now run the following commands to create the deployment and service for frontend
 
@@ -398,7 +398,7 @@ kubectl apply -f frontend-deployment.yaml
 kubectl apply -f frontend-service.yaml
 ```
 <br><br>
-**Step 3→ create a deployment and service for Backend**
+**Step 3 → create a deployment and service for Backend**
 
 1. In the same folder you will find backend-deployment.yaml and backend-service.yaml
 
@@ -433,11 +433,11 @@ kubectl get all
 <br><br>
 Now your all three tiers are ready to go but how do you access them for that we have to create a application load balancer to route outside traffic towards cluster and an ingress for in internal routing between our 3 tiers
 
-## Phase 4 --> Setup Application Load balancer and ingress
+## Phase 4 &#8594; Setup Application Load balancer and ingress
 
 *we have to create a application load balancer to route outside traffic towards cluster and an ingress for in internal routing between our 3 tiers*
 
-**Step 1 --> Setup aws load balancer ; installation and attachement it to your EKS cluster**
+**Step 1 &#8594; Setup aws load balancer ; installation and attachement it to your EKS cluster**
 
 1. Below command fetch the iam policy for your ALB
 ```text
@@ -513,7 +513,7 @@ kubectl get ing -n workshop
 <br><br>
 *Congrtas !! Your application is accessible through load balancer ingress*
 <br><br>
-## Phase 5 --> Destroy Everything
+## Phase 5 &#8594; Destroy Everything
 
 1. On your current folder run
 ```text
