@@ -514,8 +514,10 @@ kubectl get ing -n workshop
 2. go to your Web Browser and paste the above dns address
 <img src="images/48.png" width="700" >
 <br><br>
-*Congrtas !! Your application is accessible through load balancer ingress*
+**Congrtas !! Your application is accessible through load balancer ingress**
 <br><br>
+---
+
 ## Phase 5 &#8594; Destroy Everything
 
 1. On your current folder run
