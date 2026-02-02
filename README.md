@@ -2,7 +2,7 @@
 
 **what do you mean by three tier ?**
 
-
+&#8594; Forward Arrow
 It’s actually a division of your system in 3 parts
 
 1. **Presentation Layer (Tier 1):**
@@ -12,8 +12,9 @@ It’s actually a division of your system in 3 parts
 
 2. **Logical Layer (Tier 2):**
 
-Imagine this layer as the brain behind the scenes. It takes the information you provide through the user interface and processes it according to the rules of the system. If it’s a shopping website, for instance, this layer figures out things like the total price of your items, applies discounts, and checks if everything is in stock
-<br>
+- Imagine this layer as the brain behind the scenes. It takes the information you provide through the user interface and processes it according to the rules of the system. If it’s a shopping website, for instance, this layer figures out things like the total price of your items, applies discounts, and checks if everything is in stock
+
+
 3. **Data Layer (Tier 3):**
 
 - This is where the data is stored and retrieved. It’s like the memory of the system.
@@ -24,7 +25,7 @@ Imagine this layer as the brain behind the scenes. It takes the information you 
 
 ---
 
-## Completion Steps →
+## Completion Steps -->
 
  **Phase 1** → Setup base EC2 , IAM user and Basic tools on EC2
 
@@ -143,51 +144,60 @@ review and create user
 <br><br>
 
 **Step 2. launching a base EC2 where we do all work**
-<br>
+<br><br>
 1. open your aws console and navigate to ec2 and click on launch ec2
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/beadc97b-df17-446e-9e04-874e23d21e11" />
-<br>
+<br><br>
+
 2. Click on connect and run the following commands
+
 ```text
 sudo su
 apt update
 mkdir 3-tier
 cd 3-tier
 ```
-
+<br><br>
 3. fetch the code from github by git clone
+
    ```text
    https://github.com/suraj222803/Three-tier-application-deployment-on-Kubernetes.git
 
    ```
+<br><br>
 4. Run ls to see the what is inside the repo
    ```text
    ls
    ```
+<br><br>
 <img width="720" height="37" alt="image" src="https://github.com/user-attachments/assets/9fd1e7d2-3efc-41b1-94bd-ebc44b8cad37" />
-
+<br><br>
 **Step 3 --> Setup aws cli ,docker ,kubectl and eksctl**
-
+<br><br>
 **1. configuring aws cli**
-
+<br><br>
 AWS CLI (Amazon Web Services Command Line Interface) is a tool that allows you to interact with AWS services using commands
-
+<br><br>
 1. run the following commands to install aws cli
 ```text
 snap install aws-cli --classic
 ```
+<br><br>
 2.   you have to configure aws by the command →
 ```text
 aws configure
-```   
+```
+<br><br>
 3. It is asked for access key and secret key now you have to open that csv file you downloaded above and copy the access and secret key.
+<br><br>
 <img width="696" height="143" alt="image" src="https://github.com/user-attachments/assets/2e2c49f7-39db-4bcd-ac60-89526f173b89" />
-
+<br><br>
 4. Remain everything as it is and click enter.
-   
+   <br><br>
    *your aws cli is setup now setup docker*
-
+<br><br>
 **2. Setup docker**
+<br><br>
 1. run the following commands
 ```text
 apt install docker.io
@@ -196,92 +206,111 @@ newgrp docker
 sudo chmod 777 /var/run/docker.sock
 which docker
 ```
+<br><br>
 <img width="1100" height="619" alt="image" src="https://github.com/user-attachments/assets/05028cf1-a321-4725-bee5-ba4bf10427fc" />
 
 <img width="560" height="50" alt="image" src="https://github.com/user-attachments/assets/1f9885cd-ecf9-4c88-aaca-b71be94f2352" />
-
+<br><br>
 **3. setup kubectl**
-
+<br><br>
 *It is a command-line tool used in managing and interacting with Kubernetes clusters*
-
+<br><br>
 1. To install kubectl run the following commands
 ```text
 snap install kubectl --classic
 ```
+<br><br>
 <img width="720" height="97" alt="image" src="https://github.com/user-attachments/assets/69dc2dfb-ab83-4792-8d48-f78a11e61107" />
-
+<br><br>
 **4. setup eksctl**
-
+<br><br>
 *It is a command-line tool used for managing Amazon EKS (Elastic Kubernetes Service) clusters.*
-
+<br><br>
 1. To install eksctl tool run the following commands
 ```text
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/eksctl /usr/local/bin
 eksctl version
 ```
+<br><br>
 <img width="720" height="50" alt="image" src="https://github.com/user-attachments/assets/16b393d1-7221-4632-84bd-ae9d81dff4a7" />
-
-##Phase 2 →Built frontend and backend images
-
+<br><br>
+## Phase 2 →Built frontend and backend images
+<br><br>
 **Step 1 → setup Elastic container registery (ECR)**
-
+<br><br>
 *It is similiar to dockerhub where we stored the docker images*
-
+<br><br>
 1. Go to your aws console and search for ECR.
+
+<br><br>
 2. *click on create repository* for frontend and set visiblity setting to public
+<br><br>
 <img width="720" height="197" alt="image" src="https://github.com/user-attachments/assets/7a07e6eb-865b-4e1b-953f-10ed3f5dfe60" />
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/5bfe307d-65fe-4666-b869-da81b7f55b36" />
-
+<br><br>
 3. Setup backend Repository
+<br><br>
 <img width="720" height="486" alt="image" src="https://github.com/user-attachments/assets/5df6bb00-8912-4857-afcf-0ca78a79d594" />
 <img width="720" height="280" alt="image" src="https://github.com/user-attachments/assets/0a3e9470-22ee-4880-837b-e8adf937a978" />
-
+<br><br>
 **Step 2 --> Setup frontend**
-
+<br><br>
 1. In terminal go to frontend directory and run ls command
+<br><br>
 ```text
 cd forntend/
 ls
 ```
+<br><br>
 <img width="720" height="95" alt="image" src="https://github.com/user-attachments/assets/87c55249-23b2-485e-8437-b187c0e2af3a" />
-
+<br><br>
 2. Go to your ecr repo and click on view push commands
+<br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/3d949bfc-de14-478d-979c-976bc8b61dc2" />
-
+<br><br>
 3.  Run the above command one by one to build the frontend image and push to ecr repository
+<br><br>
 ```text
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/l0l7e4u1
 docker build -t 3-tier-frontend .
 docker tag 3-tier-frontend:latest public.ecr.aws/l0l7e4u1/3-tier-frontend:latest
 docker push public.ecr.aws/l0l7e4u1/3-tier-frontend:latest
 ```
+<br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/828e7505-ee79-48e9-8d9a-ac1fc5e0663c" />
+<br><br>
 <img width="720" height="161" alt="image" src="https://github.com/user-attachments/assets/0f22f064-793c-45b4-8f6a-b451506b5766" />
-
+<br><br>
 4. Let’s run a container from the image
+<br><br>
 ```text
 docker images -->copy the image name from the list 
 docker run -d -p 3000:3000 3-tier-frontend:latest
 ```
+<br><br>
 <img width="720" height="52" alt="image" src="https://github.com/user-attachments/assets/a7127b9d-71b5-4fc8-a645-10df21fb37b7" />
-
+<br><br>
 *your frontend has setup and your application is now running to see your application you could browse →public-ip:3000*
+<br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/cc3aa1b6-45bc-438b-921e-468327b941cb" />
-
+<br><br>
 **Step 3 →Setup backend**
+<br><br>
 <img width="720" height="95" alt="image" src="https://github.com/user-attachments/assets/53697884-9a8b-4728-aa5a-651d3f2668a2" />
-
+<br><br>
 1. Now go to backend directory to setup backend
 ```text
 cd ../backend
 ls
 ```
+<br><br>
 <img width="720" height="41" alt="image" src="https://github.com/user-attachments/assets/4fe43521-d47d-46c8-984a-eb7ae9be2597" />
-
+<br><br>
 2. Go to your ecr repo and click on view push commands of backend repo.
+<br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/d008501f-5aca-407b-bb0e-1af14e7f6819" />
-
+<br><br>
 3. run the above command one by one in your terminal
 ```text
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/l0l7e4u1
@@ -289,20 +318,22 @@ docker build -t 3-tier-backend .
 docker tag 3-tier-backend:latest public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 docker push public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 ```
+<br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/bfd14bf4-dc02-4538-a0af-70c3cd38a77e" />
+<br><br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/f2d30ce6-f0ec-491b-af45-d53dc34588b6" />
-
+<br><br>
 *Now your backend imge is built successfully and also pushed to Elastic container registery which we used when we create elastic kubernetes service*
-
+<br><br>
 ## Phase 3 --> Kubernetes
-
+<br><br>
 **1. What is Deployment:**
 -  *Imagine a Factory:* Think of a deployment as a factory that produces and manages copies of your software applications.
 
 -  *Multiple Replicas:* Just like a factory can produce multiple identical items, a deployment in Kubernetes can create and handle multiple copies (replicas) of your application.
 
 -  *Easy Updates:* If you want to change or update your application, the deployment system can smoothly handle that, like swapping out parts in a factory without stopping production.
--  
+   
 **2. what is Service:**
 - *Imagine a Reception Desk:*  Picture a service in Kubernetes like a reception desk in a building.
 
@@ -315,53 +346,58 @@ docker push public.ecr.aws/l0l7e4u1/3-tier-backend:latest
 - It’s like a labeled section within Kubernetes where you can organize and run your applications. Each namespace is like a fenced-off area where your apps can do their thing without stepping on each other’s toes.
 
 - So, in simpler terms, a namespace in Kubernetes is a way to keep different projects or applications separate and organized, making it easier to manage them in the bustling environment of a Kubernetes cluster
-
+<br><br>
 
 **Step 1 --> Setup EKS Cluster and create a namespace**
-
+<br><br>
 1. Run the following command to setup EKS cluster
 ```text
 eksctl create cluster --name three-tier-cluster --region us-east-1 --node-type t2.medium --nodes-min 2 --nodes-max 2
 aws eks update-kubeconfig --region us-east-1 --name three-tier-cluster
 kubectl get nodes
 ``` 
+<br><br>
 2. It takes 15 to 20 mins to create a cluster
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/b556c5e9-26dc-4062-994e-605890e57567" />
 
-
+<br><br>
 3. on aws console search for aws cloud formation to view the events happening in creation of EKS cluster
+<br>
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/57a53b1e-60d2-40af-b287-d6ead9bdaf58" />
 <img width="720" height="62" alt="image" src="https://github.com/user-attachments/assets/2046a30d-4654-49ae-bac0-8987ca671091" />
-
+<br><br>
 4. creating Namesapce from the following command
 ```text
 kubectl create namespace workshop
 kubectl config set-context --current --namespace workshop
 ```
+<br><br>
 <img width="720" height="49" alt="image" src="https://github.com/user-attachments/assets/5629bb66-de2f-491e-8b4d-b24f7aa4af7d" />
-
+<br><br>
 **Step 2--> create a deployment and service for Frontend**
+<br><br>
 1. go to k8s_manifests directory there you will find deployment and service files for frontend
 ```text
 cd ../k8s_manifests
 ```
+<br><br>
 <img width="373" height="398" alt="image" src="https://github.com/user-attachments/assets/5c5f61bd-616e-482c-8b21-28a69a282c2e" />
-
+<br><br>
 2. you have to edit the file called frontend-deployment.yaml
-
+<br><br>
 3. one thing you need to be changed that is your image name
 <img width="720" height="117" alt="image" src="https://github.com/user-attachments/assets/63bacfe1-8ae2-47e9-90c0-a672038c18f4" />
-
+<br><br>
 
 4. so, go to your ecr repo --> select the frontend repo --> click on view public listing and copy the image name and paste inside the frontend-deployment.yaml file 
-
+<br><br>
 Now run the following commands to create the deployment and service for frontend
 
 ```text
 kubectl apply -f frontend-deployment.yaml
 kubectl apply -f frontend-service.yaml
 ```
-
+<br><br>
 **Step 3→ create a deployment and service for Backend**
 
 1. In the same folder you will find backend-deployment.yaml and backend-service.yaml
@@ -380,8 +416,9 @@ kubectl apply -f backend-deployment.yaml
 kubectl apply -f backend-service.yaml
 kubectl get pods -n workshop
 ```
+<br><br>
 **Now our two tier is ready that is frontend and backend let’s setup the third tier**
-
+<br><br>
 **step 4 →Setup Database tier**
 
 1. Locate the mongo folder that stores deployment , service and secrets manifests
@@ -393,10 +430,10 @@ kubectl apply -f .
 kubectl get all
 ```
 <img width="720" height="241" alt="image" src="https://github.com/user-attachments/assets/104cc5ad-85bf-4825-898f-efbd4bc41a34" />
-
+<br><br>
 Now your all three tiers are ready to go but how do you access them for that we have to create a application load balancer to route outside traffic towards cluster and an ingress for in internal routing between our 3 tiers
 
-##Phase 4 --> Setup Application Load balancer and ingress
+## Phase 4 --> Setup Application Load balancer and ingress
 
 *we have to create a application load balancer to route outside traffic towards cluster and an ingress for in internal routing between our 3 tiers*
 
@@ -407,27 +444,29 @@ Now your all three tiers are ready to go but how do you access them for that we 
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
 ```
 <img width="720" height="47" alt="image" src="https://github.com/user-attachments/assets/d2a61cbb-908a-4f0f-99e1-6c4369bf3c61" />
-
+<br><br>
 2. This command create the iam policy in your aws account from iam_policy.json file that is setup in the first command
 
 ```text
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
 ```
 <img width="720" height="150" alt="image" src="https://github.com/user-attachments/assets/c349637c-921d-4141-9bdb-aa8841b9e6ed" />
-
+<br><br>
 3. This command apply the load balancer policy to your eks cluster so that your eks cluster is working with your load balancer according to the policy
 
 ```text
 eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=three-tier-cluster --approve
 ```
 <img width="1100" height="55" alt="image" src="https://github.com/user-attachments/assets/33405979-d243-47d9-962c-5abbe6e86f90" />
-
+<br><br>
 4. This command create and attach an service account to your cluster so that your cluster is allowed to work with load balancer service
 
 ```text
 eksctl create iamserviceaccount --cluster=three-tier-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy arn=arn:aws:iam::767397866747:policy/AWSLoadBalancerControllerIAMPolicy --approve --region=us-east-1
 ```
+<br><br>
 *Note :- please change your aws account no. from the below command otherwise it won’t work*
+<br><br>
 <img width="1100" height="229" alt="image" src="https://github.com/user-attachments/assets/53ce4423-8a18-4d14-87c3-52163a491b04" />
 
 *All the policies are attached let’s deploy the load balancer*
@@ -455,10 +494,11 @@ helm repo update eks
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=my-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
+<br><br>
 <img width="720" height="223" alt="image" src="https://github.com/user-attachments/assets/05f7459f-7678-4090-b2d9-85e5a365bcb9" />
-
+<br><br>
 *Now your Load balancer is working let’s setup Ingress for internal routing*
-
+<br><br>
 **Step 2 --> Setup Ingress for internal routing**
 <img width="373" height="398" alt="image" src="https://github.com/user-attachments/assets/65276d33-a71b-44ed-b5b1-a6e144fc253b" />
 
@@ -470,10 +510,10 @@ kubectl get ing -n workshop
 ```
 2. go to your Web Browser and paste the above dns address
 <img width="720" height="405" alt="image" src="https://github.com/user-attachments/assets/52114c0f-d1f9-4617-8a00-7d394f3e35e6" />
-
+<br><br>
 *Congrtas !! Your application is accessible through load balancer ingress*
-
-##Phase 5 --> Destroy Everything
+<br><br>
+## Phase 5 --> Destroy Everything
 
 1. On your current folder run
 ```text
